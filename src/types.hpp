@@ -12,6 +12,8 @@
 #include <stdexcept>
 #include <functional>
 
+#include <iostream>
+
 namespace tokens
 {
 
@@ -115,11 +117,15 @@ namespace pTree
 	{
 		optype type;
 
-		exprPtr ex1;
-		exprPtr ex2;
+		exprPtr ex1 = nullptr;
+		exprPtr ex2 = nullptr;
 
 		std::string to_string ();
 		static std::string to_string_st (expr &ex);
+
+
+		op () {};
+
 	};
 
 

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "error.hpp"
+#include "types.hpp"
 
 // overload to set the default parent node to m_parsedTree
 size_t CAS::parse (size_t tokenInd)
@@ -78,16 +79,79 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 
 
 
+
 	// combine the "ops" and "expressions" vectors into one whole expression,
 	// taking operator precedence into account
+
+	// this algorithm is a bit confusing to read, but it's simply iterating through the whole ops list,
+	// processing the different operators in order of precedence
 	for (int precLevel = 0; precLevel < pTree::opPrecedence.size(); ++precLevel)
 	{
 
 		const std::vector<pTree::optype> &curOps = pTree::opPrecedence.at(precLevel);
 
-	// here
+
+
+		// check each operator in the ops list
+		for (int i = 0; i < ops.size(); ++i)
+		{
+
+
+			// iterate through the operators of this precedence level
+			for (int j = 0; j < curOps.size(); ++j)
+			{
+
+				std::cout << "pl: " << precLevel << ", i: " << i << ", j: " << j << std::endl;
+
+				if (ops.at(i) == curOps.at(j))
+				{
+
+					std::cout << "here" << std::endl;
+
+					pTree::exprPtr ex1, ex2;
+					ex1 = std::move(expressions.at(i));
+					ex2 = std::move(expressions.at(i + 1));
+
+					expressions.erase(expressions.begin() + i);
+					expressions.erase(expressions.begin() + i); // same index because everything shifted backwards
+
+					std::cout << "here1" << std::endl;
+
+					pTree::exprPtr newExpr(new pTree::expr(pTree::OP));
+
+					std::cout << "here2" << std::endl;
+
+					newExpr->u._op.type = ops.at(i);
+
+					newExpr->u._op.ex1 = std::move(ex1);
+					newExpr->u._op.ex2 = std::move(ex2);
+
+					expressions.insert(expressions.begin() + i, std::move(newExpr));
+
+					std::cout << "here3" << std::endl;
+
+					ops.erase(ops.begin() + i);
+
+					std::cout << "here4" << std::endl;
+
+					--i; // there is now a new element at index i because of the erase, so it must be decremented by 1
+
+					break;
+
+				}
+
+			}
+
+
+
+		}
 
 	}
+
+
+	if (expressions.size() != 1 && ops.size() != 0) throw std::runtime_error("operator precedence algorithm bug");
+
+	std::cout << util::to_string(expressions) << std::endl;
 
 
 
