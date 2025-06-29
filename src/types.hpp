@@ -10,6 +10,7 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <functional>
 
 namespace tokens
 {
@@ -61,6 +62,9 @@ namespace pTree
 	};
 
 
+
+
+
 	// Number
 	struct number
 	{
@@ -69,6 +73,9 @@ namespace pTree
 		std::string to_string ();
 		static std::string to_string_st (expr &ex);
 	};
+
+
+
 
 	// Operator
 	enum optype
@@ -82,7 +89,13 @@ namespace pTree
 		{MULTIPLY, "Multiply"},
 		{DIVIDE, "Divide"}
 	};
-	std::string to_string (optype type);
+	static const std::map<optype, std::function<float (float, float)>> optypeFuncs
+	{
+		{ADD, [](float a, float b) { return a + b; }},
+		{SUBTRACT, [](float a, float b) { return a - b; }},
+		{MULTIPLY, [](float a, float b) { return a * b; }},
+		{DIVIDE, [](float a, float b) { return a / b; }}
+	};
 	static const std::map<std::string, optype> opMap
 	{
 		{"+", ADD},
@@ -90,6 +103,14 @@ namespace pTree
 		{"*", MULTIPLY},
 		{"/", DIVIDE}
 	};
+	// first element in outer vector has highest precedence
+	static const std::vector<std::vector<optype>> opPrecedence
+	{
+		{MULTIPLY, DIVIDE},
+		{ADD, SUBTRACT}
+	};
+	std::string to_string (optype type);
+
 	struct op
 	{
 		optype type;
@@ -100,6 +121,9 @@ namespace pTree
 		std::string to_string ();
 		static std::string to_string_st (expr &ex);
 	};
+
+
+
 
 
 

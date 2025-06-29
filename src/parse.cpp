@@ -14,7 +14,7 @@ size_t CAS::parse (size_t tokenInd)
 // this function will recursively parse m_tokens
 // the node argument tells the function where to store its parsed result, allowing for recursion
 // this function returns the index of the token AFTER the last token in the expression it just parsed (regardless of whether that token exists)
-size_t CAS::parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node)
+size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 {
 
 	std::vector<pTree::exprPtr> expressions;
@@ -75,6 +75,21 @@ size_t CAS::parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node)
 	std::cout << "parsed:" << std::endl;
 	std::cout << util::to_string(ops) << std::endl;
 	std::cout << util::to_string(expressions) << std::endl;
+
+
+
+	// combine the "ops" and "expressions" vectors into one whole expression,
+	// taking operator precedence into account
+	for (int precLevel = 0; precLevel < pTree::opPrecedence.size(); ++precLevel)
+	{
+
+		const std::vector<pTree::optype> &curOps = pTree::opPrecedence.at(precLevel);
+
+	// here
+
+	}
+
+
 
 	return 0;
 

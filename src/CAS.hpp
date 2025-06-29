@@ -23,8 +23,11 @@ class CAS
 		CAS (std::string input);
 
 		void lex ();
-		size_t parse (size_t tokenInd = 0);
-		size_t parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node);
+		size_t parse (size_t tokenInd = 0); // default node is m_parsedTree
+		size_t parse (size_t tokenInd, pTree::exprPtr &node);
+		void eval (); // default node is m_parsedTree, default res is m_evalResult
+		void eval (pTree::exprPtr &node); // default res is m_evalResult
+		void eval (pTree::exprPtr &node, float &res);
 
 		std::string& getInput();
 		std::vector<tokens::token>& getTokens();
@@ -48,6 +51,7 @@ class CAS
 		std::string m_input;
 		std::vector<tokens::token> m_tokens;
 		pTree::exprPtr m_parsedTree;
+		float m_evalResult;
 
 
 };
