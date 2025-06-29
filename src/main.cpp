@@ -7,11 +7,12 @@
 int main ()
 {
 
-	CAS c1("21.23-123+-/*");
+	CAS c1("2+3-1");
 
 	try
 	{
 		c1.lex();
+		c1.parse();
 	}
 	catch (error::CASError &e)
 	{

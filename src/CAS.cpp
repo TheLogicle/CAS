@@ -7,3 +7,19 @@ CAS::CAS (std::string input)
 	initRegexes();
 
 }
+
+
+std::string& CAS::getInput ()
+{
+	return m_input;
+}
+
+std::vector<tokens::token>& CAS::getTokens ()
+{
+	return m_tokens;
+}
+
+std::unique_ptr<pTree::expr>& CAS::getParsedTree ()
+{
+	return m_parsedTree;
+}
