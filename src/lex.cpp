@@ -13,13 +13,13 @@ void CAS::initRegexes ()
 	m_regexPairs.push_back
 	({
 		.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
-		.type = type::NUMBER
+		.type = tokens::NUMBER
 	});
 
 	m_regexPairs.push_back
 	({
 		.reg = std::regex("^(\\+|-|\\*|/)"),
-		.type = type::OP
+		.type = tokens::OP
 	});
 
 }
@@ -47,7 +47,7 @@ void CAS::lex ()
 			{
 				validSomewhere = true;
 
-				token newToken
+				tokens::token newToken
 				{
 					.type = tryReg.type,
 					.str = res.str()
