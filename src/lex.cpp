@@ -1,21 +1,32 @@
 #include "CAS.hpp"
 
+
+#include "error.hpp"
+
 #include <iostream>
 #include <regex>
-#include <stdexcept>
 
+
+void CAS::initRegexes ()
+{
+
+	m_regexPairs.push_back
+	({
+		.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
+		.type = type::NUMBER
+	});
+
+	m_regexPairs.push_back
+	({
+		.reg = std::regex("^(\\+|-|\\*|/)"),
+		.type = type::OP
+	});
+
+}
 
 
 void CAS::lex ()
 {
-
-	const std::regex token_reg(std::string{"("} +
-		+ "[0-9]+(\\.[0-9]+){0,1}" + "|" //Number
-		+ "(\\+|-|\\*|/)" + "|" //Operator
-	+ ")");
-
-
-
 
 
 	for (size_t pos = 0; pos < m_input.size();) // do not put ++pos here
@@ -25,31 +36,42 @@ void CAS::lex ()
 
 		std::string temp_input = m_input.substr(pos);
 
-		std::regex_search(temp_input, res, token_reg);
+		bool validSomewhere = false;
 
-		bool valid = res.length() > 0;
-
-		if (valid)
+		for (auto tryReg: m_regexPairs)
 		{
-			m_tokens.push_back(res.str());
 
-			pos += res.length();
+			bool valid = std::regex_search(temp_input, res, tryReg.reg);
+
+			if (valid)
+			{
+				validSomewhere = true;
+
+				token newToken
+				{
+					.type = tryReg.type,
+					.str = res.str()
+				};
+
+				m_tokens.push_back(newToken);
+				pos += res.length();
+
+				break;
+			}
+
 		}
-		else
+
+
+		if (!validSomewhere)
 		{
-			throw std::runtime_error("invalid token");
+			throw error::invalidToken();
 		}
 
 
 	}
 
+
 	std::cout << util::to_string(m_tokens) << std::endl;
 
 }
 
-
-void CAS::addToken ()
-{
-
-
-}

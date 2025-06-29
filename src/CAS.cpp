@@ -3,4 +3,7 @@
 CAS::CAS (std::string input)
 	: m_input {input}
 {
+
+	initRegexes();
+
 }
