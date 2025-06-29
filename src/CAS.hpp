@@ -14,6 +14,9 @@ class CAS
 		void lex ();
 
 	private:
+		void addToken ();
+
+	private:
 		std::string m_input;
 
 		std::vector<std::string> m_tokens;
@@ -22,9 +25,17 @@ class CAS
 
 
 
+namespace util
+{
+
+	std::string to_string (std::vector<std::string> vec);
+
+}
 
 
-namespace toktype
+
+
+namespace type
 {
 
 	typedef float number;
@@ -41,9 +52,6 @@ namespace toktype
 	};
 
 }
-
-
-
 
 
 #endif
