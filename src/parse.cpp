@@ -17,9 +17,7 @@ size_t CAS::parse (size_t tokenInd)
 size_t CAS::parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node)
 {
 
-	node = std::unique_ptr<pTree::expr>(new pTree::expr());
-
-	std::vector<pTree::expr> expressions;
+	std::vector<pTree::exprPtr> expressions;
 	std::vector<pTree::optype> ops;
 
 	// iterate through the tokens. it should be an alternating list of expressions and operators
@@ -32,10 +30,13 @@ size_t CAS::parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node)
 
 		if (m_tokens.at(tokenInd).type == tokens::NUMBER)
 		{
-			std::unique_ptr<pTree::expr> tempNode;
 
-			node->type = pTree::NUMBER;
-			node->u._number.val = std::stof(m_tokens.at(tokenInd).str);
+			pTree::exprPtr tempNode(new pTree::expr(pTree::NUMBER));
+
+			tempNode->type = pTree::NUMBER;
+			tempNode->u._number.val = std::stof(m_tokens.at(tokenInd).str);
+
+			expressions.push_back(std::move(tempNode));
 
 			++tokenInd;
 
@@ -73,6 +74,7 @@ size_t CAS::parse (size_t tokenInd, std::unique_ptr<pTree::expr> &node)
 
 	std::cout << "parsed:" << std::endl;
 	std::cout << util::to_string(ops) << std::endl;
+	std::cout << util::to_string(expressions) << std::endl;
 
 	return 0;
 

@@ -38,7 +38,7 @@ void CAS::lex ()
 
 		bool validSomewhere = false;
 
-		for (auto tryReg: m_regexPairs)
+		for (regexPair tryReg: m_regexPairs)
 		{
 
 			bool valid = std::regex_search(temp_input, res, tryReg.reg);

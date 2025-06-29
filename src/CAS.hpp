@@ -47,7 +47,7 @@ class CAS
 
 		std::string m_input;
 		std::vector<tokens::token> m_tokens;
-		std::unique_ptr<pTree::expr> m_parsedTree;
+		pTree::exprPtr m_parsedTree;
 
 
 };
@@ -60,6 +60,7 @@ namespace util
 	std::string to_string (std::vector<std::string> vec);
 	std::string to_string (std::vector<tokens::token> vec);
 	std::string to_string (std::vector<pTree::optype> vec);
+	std::string to_string (std::vector<pTree::exprPtr> &vec);
 
 }
 

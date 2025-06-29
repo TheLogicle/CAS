@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 
 namespace tokens
 {
@@ -38,6 +39,8 @@ namespace pTree
 
 	struct expr;
 
+	typedef std::unique_ptr<expr> exprPtr;
+
 
 	enum nodetype
 	{
@@ -64,6 +67,7 @@ namespace pTree
 		float val;
 
 		std::string to_string ();
+		static std::string to_string_st (expr &ex);
 	};
 
 	// Operator
@@ -90,10 +94,11 @@ namespace pTree
 	{
 		optype type;
 
-		std::unique_ptr<expr> ex1;
-		std::unique_ptr<expr> ex2;
+		exprPtr ex1;
+		exprPtr ex2;
 
 		std::string to_string ();
+		static std::string to_string_st (expr &ex);
 	};
 
 
@@ -108,12 +113,14 @@ namespace pTree
 			{
 				case NUMBER:
 					u._number = number();
-					union_to_string = &(u._number.to_string);
+					union_to_string = u._number.to_string_st;
 					break;
 				case OP:
 					u._op = op();
-					union_to_string = &(u._op.to_string);
+					union_to_string = u._op.to_string_st;
 					break;
+				default:
+					throw std::runtime_error("invalid nodetype, thrown from pTree::expr::expr");
 			}
 		}
 
@@ -128,7 +135,7 @@ namespace pTree
 
 		std::string to_string ();
 		private:
-			std::string (*union_to_string) () = NULL;
+			std::string (*union_to_string)(expr &e);
 	};
 
 }

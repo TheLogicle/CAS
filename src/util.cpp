@@ -24,7 +24,7 @@ std::string pTree::to_string (optype type)
 
 std::string pTree::expr::to_string ()
 {
-	return "{" + pTree::to_string(type) + ", " + (*union_to_string)() + "}";
+	return "{" + pTree::to_string(type) + ", " + union_to_string(*this) + "}";
 }
 
 
@@ -33,11 +33,14 @@ std::string pTree::number::to_string ()
 {
 	return std::to_string(val);
 }
+std::string pTree::number::to_string_st (pTree::expr &ex) { return ex.u._number.to_string(); }
+
 
 std::string pTree::op::to_string ()
 {
 	return pTree::to_string(type) + ", " + ex1->to_string() + ", " + ex2->to_string();
 }
+std::string pTree::op::to_string_st (pTree::expr &ex) { return ex.u._op.to_string(); }
 
 
 
@@ -114,3 +117,29 @@ std::string util::to_string (std::vector<pTree::optype> vec)
 
 }
 
+
+std::string util::to_string (std::vector<pTree::exprPtr> &vec)
+{
+
+	std::string res = "[\n";
+
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		pTree::exprPtr &el = vec.at(i);
+
+		res += "  " + el->to_string();
+
+		if (i < vec.size() - 1)
+		{
+			res += ",";
+		}
+
+		res += "\n";
+
+	}
+
+	res += "]";
+
+	return res;
+
+}
