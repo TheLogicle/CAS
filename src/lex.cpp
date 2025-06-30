@@ -70,8 +70,10 @@ void CAS::lex ()
 
 	}
 
+	#ifdef VERBOSE
 	std::cout << "lexed:" << std::endl;
 	std::cout << util::to_string(m_tokens) << std::endl;
+	#endif
 
 }
 

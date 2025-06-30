@@ -7,17 +7,30 @@
 int main ()
 {
 
-	CAS c1("2+3-1*5.2/4");
+	while (true)
+	{
 
-	try
-	{
-		c1.lex();
-		c1.parse();
-	}
-	catch (error::CASError &e)
-	{
-		std::cerr << "Error: " << e.what() << std::endl;
-		return 1;
+		std::cout << ">> ";
+		std::string input;
+		std::cin >> input;
+
+		if (input == "exit") return 0;
+
+		CAS c1(input);
+
+		try
+		{
+			c1.lex();
+			c1.parse();
+			c1.eval();
+
+			std::cout << c1.getEvalResult() << std::endl;
+		}
+		catch (error::CASError &e)
+		{
+			std::cerr << "Error: " << e.what() << std::endl;
+		}
+	
 	}
 
 }

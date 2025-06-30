@@ -32,6 +32,7 @@ class CAS
 		std::string& getInput();
 		std::vector<tokens::token>& getTokens();
 		std::unique_ptr<pTree::expr>& getParsedTree();
+		float getEvalResult ();
 
 
 	private:
@@ -41,7 +42,6 @@ class CAS
 
 
 		// other functions that are used internally
-		bool isExprStarterType (tokens::toktype type); // might not need this anymore
 		bool tokenExists (size_t tokenInd);
 
 
@@ -50,8 +50,8 @@ class CAS
 
 		std::string m_input;
 		std::vector<tokens::token> m_tokens;
-		pTree::exprPtr m_parsedTree;
-		float m_evalResult;
+		pTree::exprPtr m_parsedTree = nullptr;
+		float m_evalResult = 0;
 
 
 };

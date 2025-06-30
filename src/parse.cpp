@@ -1,7 +1,6 @@
 #include "CAS.hpp"
 
 #include <iostream>
-#include <memory>
 
 #include "error.hpp"
 #include "types.hpp"
@@ -32,12 +31,11 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 		if (m_tokens.at(tokenInd).type == tokens::NUMBER)
 		{
 
-			pTree::exprPtr tempNode(new pTree::expr(pTree::NUMBER));
+			pTree::number* num = new pTree::number();
 
-			tempNode->type = pTree::NUMBER;
-			tempNode->u._number.val = std::stof(m_tokens.at(tokenInd).str);
+			num->val = std::stof(m_tokens.at(tokenInd).str);
 
-			expressions.push_back(std::move(tempNode));
+			expressions.push_back(pTree::exprPtr(num));
 
 			++tokenInd;
 
@@ -73,9 +71,11 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 	}
 
 
+	#ifdef VERBOSE
 	std::cout << "parsed:" << std::endl;
 	std::cout << util::to_string(ops) << std::endl;
 	std::cout << util::to_string(expressions) << std::endl;
+	#endif
 
 
 
@@ -101,12 +101,8 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 			for (int j = 0; j < curOps.size(); ++j)
 			{
 
-				std::cout << "pl: " << precLevel << ", i: " << i << ", j: " << j << std::endl;
-
 				if (ops.at(i) == curOps.at(j))
 				{
-
-					std::cout << "here" << std::endl;
 
 					pTree::exprPtr ex1, ex2;
 					ex1 = std::move(expressions.at(i));
@@ -115,24 +111,16 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 					expressions.erase(expressions.begin() + i);
 					expressions.erase(expressions.begin() + i); // same index because everything shifted backwards
 
-					std::cout << "here1" << std::endl;
+					pTree::op* combined = new pTree::op;
 
-					pTree::exprPtr newExpr(new pTree::expr(pTree::OP));
+					combined->type = ops.at(i);
 
-					std::cout << "here2" << std::endl;
+					combined->ex1 = std::move(ex1);
+					combined->ex2 = std::move(ex2);
 
-					newExpr->u._op.type = ops.at(i);
-
-					newExpr->u._op.ex1 = std::move(ex1);
-					newExpr->u._op.ex2 = std::move(ex2);
-
-					expressions.insert(expressions.begin() + i, std::move(newExpr));
-
-					std::cout << "here3" << std::endl;
+					expressions.insert(expressions.begin() + i, pTree::exprPtr(combined));
 
 					ops.erase(ops.begin() + i);
-
-					std::cout << "here4" << std::endl;
 
 					--i; // there is now a new element at index i because of the erase, so it must be decremented by 1
 
@@ -151,26 +139,16 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 
 	if (expressions.size() != 1 && ops.size() != 0) throw std::runtime_error("operator precedence algorithm bug");
 
+	#ifdef VERBOSE
 	std::cout << util::to_string(expressions) << std::endl;
+	#endif
 
+	node = std::move(expressions.at(0));
 
-
-	return 0;
-
-}
-
-
-bool CAS::isExprStarterType (tokens::toktype type)
-{
-
-	for (tokens::toktype el: pTree::exprStarterTypes)
-	{
-		if (type == el) return true;
-	}
-
-	return false;
+	return tokenInd;
 
 }
+
 
 bool CAS::tokenExists (size_t tokenInd)
 {

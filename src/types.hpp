@@ -40,40 +40,21 @@ namespace tokens
 namespace pTree
 {
 
-	struct expr;
+	struct expr
+	{
+		virtual std::string to_string ();
+	};
 
 	typedef std::unique_ptr<expr> exprPtr;
 
 
-	enum nodetype
-	{
-		NUMBER, OP
-	};
-	static const std::map<nodetype, std::string> nodetypeNames
-	{
-		{NUMBER, "Number"},
-		{OP, "Operator"}
-	};
-	std::string to_string (nodetype type);
-
-
-	// might not need this anymore
-	const std::vector<tokens::toktype> exprStarterTypes
-	{
-		NUMBER
-	};
-
-
-
-
 
 	// Number
-	struct number
+	struct number : expr
 	{
 		float val;
 
-		std::string to_string ();
-		static std::string to_string_st (expr &ex);
+		virtual std::string to_string ();
 	};
 
 
@@ -113,60 +94,16 @@ namespace pTree
 	};
 	std::string to_string (optype type);
 
-	struct op
+	struct op : expr
 	{
 		optype type;
 
 		exprPtr ex1 = nullptr;
 		exprPtr ex2 = nullptr;
 
-		std::string to_string ();
-		static std::string to_string_st (expr &ex);
-
-
-		op () {};
-
+		virtual std::string to_string ();
 	};
 
-
-
-
-
-
-	struct expr
-	{
-		nodetype type;
-
-		expr (nodetype _type) : type {_type}
-		{
-			switch (type)
-			{
-				case NUMBER:
-					u._number = number();
-					union_to_string = u._number.to_string_st;
-					break;
-				case OP:
-					u._op = op();
-					union_to_string = u._op.to_string_st;
-					break;
-				default:
-					throw std::runtime_error("invalid nodetype, thrown from pTree::expr::expr");
-			}
-		}
-
-		union expr_u
-		{
-			number _number;
-			op _op;
-
-			expr_u(){}
-			~expr_u(){}
-		} u;
-
-		std::string to_string ();
-		private:
-			std::string (*union_to_string)(expr &e);
-	};
 
 }
 

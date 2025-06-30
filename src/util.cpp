@@ -10,11 +10,6 @@ std::string tokens::to_string (toktype type)
 	return toktypeNames.at(type);
 };
 
-std::string pTree::to_string (nodetype type)
-{
-	return nodetypeNames.at(type);
-}
-
 std::string pTree::to_string (optype type)
 {
 	return optypeNames.at(type);
@@ -24,24 +19,18 @@ std::string pTree::to_string (optype type)
 
 std::string pTree::expr::to_string ()
 {
-	return "{" + pTree::to_string(type) + ", " + union_to_string(*this) + "}";
+	return "<expr object>";
 }
-
-
 
 std::string pTree::number::to_string ()
 {
-	return std::to_string(val);
+	return "{" + std::to_string(val) + "}";
 }
-std::string pTree::number::to_string_st (pTree::expr &ex) { return ex.u._number.to_string(); }
-
 
 std::string pTree::op::to_string ()
 {
-	return pTree::to_string(type) + ", " + ex1->to_string() + ", " + ex2->to_string();
+	return "{" + pTree::to_string(type) + ", " + ex1->to_string() + ", " + ex2->to_string() + "}";
 }
-std::string pTree::op::to_string_st (pTree::expr &ex) { return ex.u._op.to_string(); }
-
 
 
 
