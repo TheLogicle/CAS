@@ -52,7 +52,7 @@ namespace pTree
 	// Number
 	struct number : expr
 	{
-		float val;
+		double val;
 
 		virtual std::string to_string ();
 	};
@@ -72,12 +72,12 @@ namespace pTree
 		{MULTIPLY, "Multiply"},
 		{DIVIDE, "Divide"}
 	};
-	static const std::map<optype, std::function<float (float, float)>> optypeFuncs
+	static const std::map<optype, std::function<double (double, double)>> optypeFuncs
 	{
-		{ADD, [](float a, float b) { return a + b; }},
-		{SUBTRACT, [](float a, float b) { return a - b; }},
-		{MULTIPLY, [](float a, float b) { return a * b; }},
-		{DIVIDE, [](float a, float b) { return a / b; }}
+		{ADD, [](double a, double b) { return a + b; }},
+		{SUBTRACT, [](double a, double b) { return a - b; }},
+		{MULTIPLY, [](double a, double b) { return a * b; }},
+		{DIVIDE, [](double a, double b) { return a / b; }}
 	};
 	static const std::map<std::string, optype> opMap
 	{

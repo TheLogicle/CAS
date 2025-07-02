@@ -24,7 +24,7 @@ std::unique_ptr<pTree::expr>& CAS::getParsedTree ()
 	return m_parsedTree;
 }
 
-float CAS::getEvalResult ()
+double CAS::getEvalResult ()
 {
 	return m_evalResult;
 }

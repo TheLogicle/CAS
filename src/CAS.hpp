@@ -27,31 +27,37 @@ class CAS
 		size_t parse (size_t tokenInd, pTree::exprPtr &node);
 		void eval (); // default node is m_parsedTree, default res is m_evalResult
 		void eval (pTree::exprPtr &node); // default res is m_evalResult
-		void eval (pTree::exprPtr &node, float &res);
+		void eval (pTree::exprPtr &node, double &res);
 
 		std::string& getInput();
 		std::vector<tokens::token>& getTokens();
 		std::unique_ptr<pTree::expr>& getParsedTree();
-		float getEvalResult ();
+		double getEvalResult ();
+
 
 
 	private:
-		// initialization functions that are called by the CAS constructor
-		// do not call these manually!
-		void initRegexes ();
-
-
 		// other functions that are used internally
 		bool tokenExists (size_t tokenInd);
 
 
-		// internal processing data
-		std::vector<regexPair> m_regexPairs;
+		// internal lexing regexes
+		const std::vector<regexPair> m_regexPairs
+		{
+			{
+				.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
+				.type = tokens::NUMBER
+			},
+			{
+				.reg = std::regex("^(\\+|-|\\*|/)"),
+				.type = tokens::OP
+			}
+		};
 
 		std::string m_input;
 		std::vector<tokens::token> m_tokens;
 		pTree::exprPtr m_parsedTree = nullptr;
-		float m_evalResult = 0;
+		double m_evalResult = 0;
 
 
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "CAS.hpp"
 #include "error.hpp"
@@ -24,7 +25,7 @@ int main ()
 			c1.parse();
 			c1.eval();
 
-			std::cout << c1.getEvalResult() << std::endl;
+			std::cout << std::setprecision(10) << c1.getEvalResult() << std::endl;
 		}
 		catch (error::CASError &e)
 		{

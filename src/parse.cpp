@@ -26,14 +26,14 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 	{
 
 		/////// first check that there is a valid expression
-		if (!tokenExists(tokenInd)) throw error::tempError("token does not exist");
+		if (!tokenExists(tokenInd)) throw error::tempError("expected expression, got EOL");
 
 		if (m_tokens.at(tokenInd).type == tokens::NUMBER)
 		{
 
 			pTree::number* num = new pTree::number();
 
-			num->val = std::stof(m_tokens.at(tokenInd).str);
+			num->val = std::stod(m_tokens.at(tokenInd).str);
 
 			expressions.push_back(pTree::exprPtr(num));
 

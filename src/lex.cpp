@@ -7,23 +7,6 @@
 #include <regex>
 
 
-void CAS::initRegexes ()
-{
-
-	m_regexPairs.push_back
-	({
-		.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
-		.type = tokens::NUMBER
-	});
-
-	m_regexPairs.push_back
-	({
-		.reg = std::regex("^(\\+|-|\\*|/)"),
-		.type = tokens::OP
-	});
-
-}
-
 
 void CAS::lex ()
 {

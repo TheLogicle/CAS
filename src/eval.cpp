@@ -15,7 +15,7 @@ void CAS::eval (pTree::exprPtr &node)
 
 
 
-void CAS::eval (pTree::exprPtr &node, float &res)
+void CAS::eval (pTree::exprPtr &node, double &res)
 {
 
 	if (typeid(*node) == typeid(pTree::number))
@@ -27,7 +27,7 @@ void CAS::eval (pTree::exprPtr &node, float &res)
 	{
 		auto &opCast = dynamic_cast<pTree::op&>(*node);
 
-		float r1, r2;
+		double r1, r2;
 		eval(opCast.ex1, r1);
 		eval(opCast.ex2, r2);
 
