@@ -3,17 +3,10 @@
 
 #include <string>
 #include <vector>
-#include <regex>
 
 
 #include "types.hpp"
 
-
-struct regexPair
-{
-	std::regex reg;
-	tokens::toktype type;
-};
 
 
 class CAS
@@ -40,19 +33,6 @@ class CAS
 		// other functions that are used internally
 		bool tokenExists (size_t tokenInd);
 
-
-		// internal lexing regexes
-		const std::vector<regexPair> m_regexPairs
-		{
-			{
-				.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
-				.type = tokens::NUMBER
-			},
-			{
-				.reg = std::regex("^(\\+|-|\\*|/)"),
-				.type = tokens::OP
-			}
-		};
 
 		std::string m_input;
 		std::vector<tokens::token> m_tokens;

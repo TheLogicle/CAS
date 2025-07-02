@@ -5,15 +5,20 @@
 #include "error.hpp"
 
 
+auto& prompt (std::string &input)
+{
+	std::cout << ">> ";
+	return getline(std::cin, input);
+}
+
+
 int main ()
 {
 
-	while (true)
-	{
+	std::string input;
 
-		std::cout << ">> ";
-		std::string input;
-		std::cin >> input;
+	while (prompt(input))
+	{
 
 		if (input == "exit") return 0;
 

@@ -21,7 +21,16 @@ void CAS::lex ()
 
 		bool validSomewhere = false;
 
-		for (regexPair tryReg: m_regexPairs)
+		const std::regex whitespaceReg("^ ");
+		bool isWhitespace = std::regex_search(temp_input, res, whitespaceReg);
+
+		if (isWhitespace)
+		{
+			pos += res.length();
+			continue;
+		}
+
+		for (tokens::regexPair tryReg: tokens::regexPairs)
 		{
 
 			bool valid = std::regex_search(temp_input, res, tryReg.reg);

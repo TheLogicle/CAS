@@ -9,7 +9,7 @@
 #include <map>
 #include <vector>
 #include <memory>
-#include <stdexcept>
+#include <regex>
 #include <functional>
 
 #include <iostream>
@@ -20,14 +20,48 @@ namespace tokens
 
 	enum toktype
 	{
-		NUMBER, OP
+		NUMBER, OP, OPEN_PAR, CLOSED_PAR
 	};
 	const std::map<toktype, std::string> toktypeNames 
 	{
 		{NUMBER, "Number"},
-		{OP, "Operator"}
+		{OP, "Operator"},
+		{OPEN_PAR, "Open parenthesis"},
+		{CLOSED_PAR, "Closed parenthesis"}
 	};
 	std::string to_string (toktype type); // defined in util.cpp
+
+
+	struct regexPair
+	{
+		std::regex reg;
+		tokens::toktype type;
+	};
+
+
+	// regexes used for lexing
+	// entries with smaller index get higher priority
+	// the whitespace regex is found in lex.cpp
+	const std::vector<regexPair> regexPairs
+	{
+		{
+			.reg = std::regex("^[0-9]+(\\.[0-9]+){0,1}"),
+			.type = tokens::NUMBER
+		},
+		{
+			.reg = std::regex("^(\\+|-|\\*|/)"),
+			.type = tokens::OP
+		},
+		{
+			.reg = std::regex("^\\("),
+			.type = tokens::OPEN_PAR
+		},
+		{
+			.reg = std::regex("^\\)"),
+			.type = tokens::CLOSED_PAR
+		}
+	};
+
 
 	struct token
 	{

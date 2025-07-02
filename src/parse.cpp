@@ -40,7 +40,7 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 			++tokenInd;
 
 		}
-		else throw error::tempError("token must be a number"); // it needs to be an expression
+		else throw error::tempError("expected expression, got non-expression"); // it needs to be an expression
 
 
 
@@ -62,11 +62,7 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 
 			++tokenInd;
 		}
-		else
-		{
-			expectExpr = false;
-			break;
-		}
+		else throw error::tempError("expected operator, got non-operator");
 
 	}
 

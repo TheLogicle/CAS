@@ -2,11 +2,7 @@
 
 CAS::CAS (std::string input)
 	: m_input {input}
-{
-
-	initRegexes();
-
-}
+{}
 
 
 std::string& CAS::getInput ()
