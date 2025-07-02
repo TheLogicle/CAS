@@ -14,7 +14,7 @@ size_t CAS::parse (size_t tokenInd)
 // this function will recursively parse m_tokens
 // the node argument tells the function where to store its parsed result, allowing for recursion
 // this function returns the index of the token AFTER the last token in the expression it just parsed (regardless of whether that token exists)
-size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
+size_t CAS::parse (size_t tokenInd, pTree::exprPtr &emptyNode)
 {
 
 	std::vector<pTree::exprPtr> expressions;
@@ -25,22 +25,31 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 	while (expectExpr)
 	{
 
+
 		/////// first check that there is a valid expression
 		if (!tokenExists(tokenInd)) throw error::tempError("expected expression, got EOL");
 
-		if (m_tokens.at(tokenInd).type == tokens::NUMBER)
+		if (m_tokens.at(tokenInd).type == tokens::NUMBER) // a number is a valid expression
 		{
 
 			pTree::number* num = new pTree::number();
 
 			num->val = std::stod(m_tokens.at(tokenInd).str);
-
 			expressions.push_back(pTree::exprPtr(num));
 
 			++tokenInd;
 
 		}
+		else if (m_tokens.at(tokenInd).type == tokens::OPEN_PAR) // open parenthesis also validly starts an expression
+		{
+			pTree::exprPtr subExpr;
+
+			++tokenInd;
+			tokenInd = parse(tokenInd, subExpr);
+			expressions.push_back(std::move(subExpr));
+		}
 		else throw error::tempError("expected expression, got non-expression"); // it needs to be an expression
+
 
 
 
@@ -62,14 +71,24 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 
 			++tokenInd;
 		}
+		else if (m_tokens.at(tokenInd).type == tokens::CLOSED_PAR)
+		{
+			++tokenInd;
+			expectExpr = false;
+			break;
+		}
 		else throw error::tempError("expected operator, got non-operator");
+
+
 
 	}
 
 
 	#ifdef VERBOSE
 	std::cout << "parsed:" << std::endl;
+	std::cout << "operators..." << std::endl;
 	std::cout << util::to_string(ops) << std::endl;
+	std::cout << "expressions..." << std::endl;
 	std::cout << util::to_string(expressions) << std::endl;
 	#endif
 
@@ -139,7 +158,7 @@ size_t CAS::parse (size_t tokenInd, pTree::exprPtr &node)
 	std::cout << util::to_string(expressions) << std::endl;
 	#endif
 
-	node = std::move(expressions.at(0));
+	emptyNode = std::move(expressions.at(0));
 
 	return tokenInd;
 
